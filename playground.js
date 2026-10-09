@@ -76,3 +76,5 @@ if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){navigator.
 
 
 $('coverStart').onclick=()=>{SFX.start();ui.cat='stories';pickWorld=null;onlyMyArt=false;pickPageLimit=12;saveUi();renderPick();show('scr-pick')};
+
+$('homeLogo').onclick=()=>{if(cur&&!$('color').hidden){if(gesture&&gesture.kind!=='pan')commitArt();saveState()}pointers.clear();gesture=null;pinch=null;closeSheet();closeFinish();if(!$('guide').hidden)closeGuide();if(!$('settings').hidden)closeSettings();document.querySelector('.zoom-tools').open=false;renderCover();refreshArtist();refreshResume();show('scr-cover');$('coverStart').focus({preventScroll:true})};
