@@ -1225,13 +1225,13 @@ let onlyMyArt=false;
 let pickPageLimit=12,pickWorld=null;
 function renderPick(){
   const L=LV[ui.lv],cat=CATS.find(c=>c.id===ui.cat)||CATS[0];
-  const badge=$('pickBadge');badge.style.setProperty('--lc',L.c);badge.textContent=`${L.name} ${'★'.repeat(ui.lv)}`;
+  const badge=$('pickBadge');badge.style.setProperty('--lc',L.c);badge.textContent=cat.id==='characters'?'卡通明星 · 选喜欢的角色':`${L.name} ${'★'.repeat(ui.lv)}`;
   const dn=doneCount(ui.lv);
   $('pickSay').textContent=dn?`你已经完成 ${dn} 张${L.name}图了，再选一张吧！`:'选一张你喜欢的图，我们开始涂色！';
   const tabs=$('tabs');tabs.innerHTML='';
   CATS.forEach(c=>{const t=document.createElement('button');t.className='tab';t.setAttribute('role','tab');t.style.setProperty('--c',c.color);
     t.textContent=c.name;t.setAttribute('aria-selected',String(ui.cat===c.id));t.onclick=()=>{ui.cat=c.id;pickPageLimit=12;saveUi();SFX.tap();renderPick()};tabs.appendChild(t)});
-  const list=LIST[cat.id+ui.lv].filter(p=>(!onlyMyArt||hasArtwork(p.id))&&(!pickWorld||pickWorld.matches(p))),grid=$('grid');grid.innerHTML='';
+  const list=(cat.id==='characters'?[1,2,3].flatMap(lv=>LIST['characters'+lv]):LIST[cat.id+ui.lv]).filter(p=>(!onlyMyArt||hasArtwork(p.id))&&(!pickWorld||pickWorld.matches(p))),grid=$('grid');grid.innerHTML='';
   $('myArt').setAttribute('aria-pressed',String(onlyMyArt));$('myArt').textContent=onlyMyArt?'🌈 看全部图画':'🖼 我的作品';
   $('galleryHint').textContent=onlyMyArt?'你的颜色，已经留在这里啦！':'选喜欢的主题，或让惊喜带你出发！';
   if(!list.length)grid.innerHTML='<p class="empty-gallery">🖍 这里还没有作品，选一张图，留下你的第一抹颜色吧！</p>'; 
@@ -1242,12 +1242,12 @@ function renderPick(){
     const card=document.createElement('button');card.className='card glass';card.setAttribute('aria-label','涂 '+p.name);
     card.style.setProperty('--i',idx);card.style.setProperty('--c',cat.color);card.style.setProperty('--lc',L.c);
     const th=document.createElement('span');th.className='th';th.appendChild(svg);card.appendChild(th);
-    card.insertAdjacentHTML('beforeend',`${got?`<span class="medal">${'★'.repeat(got)}</span>`:''}<div class="name">${p.name}</div><div class="meta"><span class="chip">${n} 块</span><span>${filled&&!got?Math.round(filled/n*100)+'% 已涂':'No.'+(idx+1)}</span></div><div class="bar"><i style="width:${filled/n*100}%"></i></div>`);
+    card.insertAdjacentHTML('beforeend',`${got?`<span class="medal">${'★'.repeat(got)}</span>`:''}<div class="name">${p.name}</div><div class="meta"><span class="chip">${n} 块</span><span>${filled&&!got?Math.round(filled/n*100)+'% 已涂':cat.id==='characters'?LV[p.lv].name+' '+ '★'.repeat(p.lv):'No.'+(idx+1)}</span></div><div class="bar"><i style="width:${filled/n*100}%"></i></div>`);
     card.onclick=()=>{SFX.select();openPic(p)};grid.appendChild(card);
   });
 }
 $('myArt').onclick=()=>{onlyMyArt=!onlyMyArt;SFX.tap();renderPick()};
-$('surprisePic').onclick=()=>{const list=LIST[ui.cat+ui.lv].filter(p=>!pickWorld||pickWorld.matches(p));if(!list.length){toast('这个分类暂时没有图画，换个分类试试');return}SFX.start();openPic(rand(list))};
+$('surprisePic').onclick=()=>{const list=(ui.cat==='characters'?[1,2,3].flatMap(lv=>LIST['characters'+lv]):LIST[ui.cat+ui.lv]).filter(p=>!pickWorld||pickWorld.matches(p));if(!list.length){toast('这个分类暂时没有图画，换个分类试试');return}SFX.start();openPic(rand(list))};
 $('pickBack').onclick=()=>{SFX.tap();renderLevels();show('scr-level')};
 
 /* 4. coloring */
@@ -1504,6 +1504,7 @@ paintHud();renderCover();renderDock();
 <script src="catalog-refresh.js"></script>
 <script src="art-gallery.js"></script>
 <script src="story-art.js"></script>
+<script src="character-art.js"></script>
 <script src="playground.js"></script>
 <script type="application/ld+json">{
   "@context": "https://schema.org",
