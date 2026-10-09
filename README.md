@@ -25,3 +25,11 @@ GitHub Pages 使用 main 分支和仓库根目录；已有 CNAME 域名配置保
 音乐只保留播放／暂停按键，五首依次循环，音量使用设备音量。浏览器首次需要用户点击播放。
 
 新版实际使用 WebP 和 MP3。原始 PNG/WAV 文件保留作源素材，不会在页面中加载。
+
+## 搜索与分享
+
+首页提供描述性标题、搜索描述、规范网址、Open Graph/Twitter 分享信息和 WebSite/WebPage/WebApplication 结构化数据。彩绘盘图标包含 SVG、ICO、多尺寸 PNG、Apple touch 和应用图标。
+
+正式网址为 https://www.kidpaint.my/ 。robots.txt 允许抓取，sitemap.xml 只列出真实的首页网址；应用内部画布和主题界面不伪造为独立页面。
+
+可以在 Google Search Console 验证该域名或网址前缀，提交 https://www.kidpaint.my/sitemap.xml 并请求首页编入索引。本站未加入任何虚构评分，也不承诺搜索排名或收录时间。
