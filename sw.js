@@ -1,5 +1,5 @@
 /* Versioned offline assets. Artwork stays in local browser storage. */
-const CACHE='kidpaint-0f50adc00a7794';
+const CACHE='kidpaint-6ad0c0faf3841a';
 const CORE=["./index.html","./playground.js","./experience.js","./visit-stats.js","./catalog-refresh.js","./art-gallery.js","./story-art.js","./character-art.js","./character-library.js","./assets/art-source/LICENSE-GRAPHICS","./manifest.webmanifest","./assets/app-icon.svg","./assets/app-icon-192.png","./assets/app-icon-512.png","./favicon.svg","./favicon.ico","./favicon-48.png","./favicon-96.png","./apple-touch-icon.png","./assets/brand-hero.webp","./assets/brand-buddy.webp","./assets/mascot-girl.webp","./assets/mascot-boy.webp","./music/rainbow.mp3","./music/forest.mp3","./music/dream.mp3","./music/spring.mp3","./music/clouds.mp3"];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('kidpaint-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
