@@ -329,6 +329,7 @@ button:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
 .art-credit-link{display:block;text-align:center;font-size:12px;color:#665488;padding:12px} .gallery-author{font-size:13px;color:#74618A;margin:8px 0}
 .artist-hud{font-weight:900;font-size:clamp(13px,2.5vw,20px);background:linear-gradient(90deg,#ed3071,#c26800,#168343,#007ca8,#7846cc);background-clip:text;-webkit-background-clip:text;color:transparent;max-width:40vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.name-details{max-width:460px;width:100%;margin-top:12px}.name-details>summary{cursor:pointer;font-size:14px;font-weight:800;color:#7650a8;text-align:center}.name-details .artist-form{margin:10px auto}.cover-art{max-height:40vh}.cover-art .brand-hero{max-height:40vh;object-fit:contain}.cover-features{display:none}.cover-sub{margin:3px 0 12px}.cover-title{margin:10px 0 3px}.cover{gap:10px}
 @media(max-width:760px){.bar-top .artist-hud{order:1;flex-basis:100%;max-width:100%;text-align:center;font-size:17px;line-height:1.4}}
+.zoom-tools{position:relative;margin-left:auto}.zoom-tools>summary{cursor:pointer;font-weight:800;font-size:14px;padding:10px;list-style:none;background:#fff;border-radius:14px;min-height:44px;box-sizing:border-box}.zoom-options{position:absolute;right:0;top:100%;z-index:8;display:flex;align-items:center;gap:6px;flex-wrap:wrap;background:#fffaf3;box-shadow:0 10px 25px #49327033;border:2px solid white;border-radius:18px;padding:12px;min-width:240px}.signature-details{padding:8px 4px 0;font-size:12px;color:#79678f}.signature-details>summary{cursor:pointer}.studio-extra{padding:7px;gap:6px}.studio-extra>.tool{flex:1;font-size:14px;padding:10px 6px}.sticker-tray{max-height:145px;overflow:auto;padding:8px}.studio-tip{font-size:12px}
 </style>
 </head>
 <body>
@@ -388,12 +389,12 @@ button:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
       <button class="btn" id="redo" disabled aria-label="重做">↷ 重做</button><button class="btn" id="guideOpen">💡 怎么玩</button><span class="confirm" id="resetWrap"></span>
       <button class="btn primary" id="doneBtn">✔ 完成</button>
     </div>
-    <div class="stage"><div class="mission" id="studioMission"></div><p class="save-status" id="saveStatus" role="status" aria-live="polite">🖍 开始创作，作品会自动保存</p><div class="quick-colors" id="quickColors" aria-label="常用颜色"></div>
-<div class="studio-extra"><button class="tool" id="tBrush" aria-pressed="false">🖌 画笔</button><label>粗细 <input id="brushSize" type="range" min="2" max="28" value="8" aria-label="画笔粗细"></label><button class="tool" id="tRainbow" aria-pressed="false">🌈 彩虹笔</button><button class="tool" id="tGradient" aria-pressed="false">🎨 渐变笔</button><button class="tool" id="tSticker" aria-pressed="false">🎁 贴纸</button><button class="tool" id="tPan" aria-pressed="false">✋ 移动画布</button><button class="btn small" id="zoomIn" aria-label="放大画布">＋</button><button class="btn small" id="zoomOut" aria-label="缩小画布">－</button><button class="btn small" id="zoomReset">全图</button><span id="zoomLabel">100%</span></div>
-<details class="layer-panel"><summary>🧩 图层：图画、画笔、贴纸</summary><div id="layerControls"></div><button class="btn small" id="swapLayers">切换画笔与贴纸前后</button><p class="hint">眼睛控制显示，锁头保护内容；下载会使用当前显示的图层。</p></details><div class="sticker-tray" id="stickerTray" hidden></div><div class="studio-extra" id="stickerControls" hidden><label>贴纸大小 <input type="range" id="stickerSize" min="30" max="150" value="80"></label><button class="btn small" id="deleteSticker">移除贴纸</button><button class="btn small" id="duplicateSticker">复制贴纸</button><label>旋转 <input id="stickerRotation" type="range" min="-180" max="180" value="0" aria-label="贴纸旋转角度"></label><button class="btn small" id="stickerFront">移到最前</button><button class="btn small" id="stickerBack">移到最后</button></div><p class="studio-tip">画笔可以自由添画；贴纸可拖动。橡皮点一下可移除线条或贴纸。放大后用「移动画布」看细节，双指也能缩放。</p>
+    <div class="stage"><p class="save-status" id="saveStatus" role="status" aria-live="polite">🖍 开始创作，作品会自动保存</p><div class="quick-colors" id="quickColors" aria-label="常用颜色"></div>
+<div class="studio-extra"><button class="tool" id="tBrush" aria-pressed="false">🖌 画笔</button><input id="brushSize" type="hidden" value="8"><button class="tool" id="tRainbow" aria-pressed="false">🌈 彩虹笔</button><button class="tool" id="tSticker" aria-pressed="false">🎁 贴纸</button><details class="zoom-tools"><summary>🔍 放大</summary><div class="zoom-options"><button class="tool" id="tPan" aria-pressed="false">✋ 移动画布</button><button class="btn small" id="zoomIn" aria-label="放大画布">＋</button><button class="btn small" id="zoomOut" aria-label="缩小画布">－</button><button class="btn small" id="zoomReset">全图</button><span id="zoomLabel">100%</span></div></details></div>
+<div class="sticker-tray" id="stickerTray" hidden></div><p class="studio-tip">选颜色点一点，或用画笔自由画。贴纸可拖动，橡皮可擦掉；双指可以放大。</p>
       <div class="board"><div class="paper-heading"><span class="paper-label">MY COLORFUL WORLD</span><span class="paper-spark" aria-hidden="true">✦ ✧ ✦</span></div>
         <svg id="canvas" viewBox="0 0 400 400" role="group" aria-label="彩绘画布：选择颜色后可点选区域，也可以用画笔创作"></svg>
-        <div class="paper-signature"><label for="artArtist">🖍 作品署名</label><input id="artArtist" maxlength="20" type="text" placeholder="你的小画家名字"><label class="signature-switch"><input type="checkbox" id="showSignature" checked> 下载时显示名字</label></div><div class="progress"><span id="progTxt">已涂 0 / 0</span><div class="bar"><i id="progBar" style="width:0"></i></div></div>
+        <details class="signature-details"><summary>🖍 作品署名</summary><div class="paper-signature"><label for="artArtist">🖍 作品署名</label><input id="artArtist" maxlength="20" type="text" placeholder="你的小画家名字"><label class="signature-switch"><input type="checkbox" id="showSignature" checked> 下载时显示名字</label></div></details><div class="progress"><span id="progTxt">已涂 0 / 0</span><div class="bar"><i id="progBar" style="width:0"></i></div></div>
       </div>
       <div class="dock glass">
         <button class="pick" id="openPal" aria-haspopup="dialog">
@@ -1261,7 +1262,7 @@ function openPic(p){
   regions=drawingRegions(cv);
   const fills=store[p.id]||[];
   regions.forEach((el,i)=>{el.dataset.i=i;el.setAttribute('fill',fills[i]||WHITE)});
-  decorateSvg(cv,p.id);applyView();$('studioMission').textContent='✨ 灵感：'+missions[missionIndex]+' 也可以画你自己的故事！';done=progress()===regions.length;
+  decorateSvg(cv,p.id);applyView();done=progress()===regions.length;
   $('doneBtn').classList.toggle('pulse',done);
   resetConfirm(false);updateUndo();syncStickerControls();show('color');
   if(!Object.keys(store).length)setTimeout(()=>toast('先选颜色，再点图画或背景的空白处，背景也能涂色！'),600);
@@ -1472,11 +1473,8 @@ function refreshMission(){$('pickMission').textContent='✨ 创作灵感：'+mis
 $('newMission').onclick=()=>{missionIndex=(missionIndex+1)%missions.length;refreshMission()};refreshMission();
 $('tBrush').onclick=()=>setTool('brush');$('tSticker').onclick=()=>setTool('sticker');$('tPan').onclick=()=>setTool('pan');
 const stickerKeys=['cat','bunny','butterfly','rainbow','star','heart','flower','rocket','gift','balloon','sun','unicorn'];let uid=0;const nextId=()=>Date.now().toString(36)+'-'+(++uid);
-stickerKeys.forEach(key=>{const btn=document.createElement('button');btn.className='sticker-choice';btn.setAttribute('aria-label','添加'+EL[key].n+'贴纸');const b=B();put(b,key,200,200,290,false);const svg=makeSvg(b.out());paintRandom(svg);btn.appendChild(svg);btn.onclick=()=>{snapshotArt();const t={id:nextId(),key,x:viewX+200/zoom,y:viewY+200/zoom,size:80};artFor(cur.id).stickers.push(t);selectedSticker=t.id;commitArt();toast('拖动贴纸，或调整下面的大小 ✨')};$('stickerTray').appendChild(btn)});
-function syncStickerControls(){const t=cur&&artFor(cur.id).stickers.find(t=>t.id===selectedSticker);$('stickerControls').hidden=!t;if(t)$('stickerSize').value=t.size}
-$('stickerSize').onchange=()=>{const t=artFor(cur.id).stickers.find(t=>t.id===selectedSticker);if(!t)return;snapshotArt();t.size=+$('stickerSize').value;commitArt()};
-$('deleteSticker').onclick=()=>{snapshotArt();artFor(cur.id).stickers=artFor(cur.id).stickers.filter(t=>t.id!==selectedSticker);selectedSticker=null;commitArt()};
-$('duplicateSticker').onclick=()=>{const t=artFor(cur.id).stickers.find(t=>t.id===selectedSticker);if(!t)return;snapshotArt();const copy={...t,id:nextId(),x:Math.min(370,t.x+20),y:Math.min(370,t.y+20)};artFor(cur.id).stickers.push(copy);selectedSticker=copy.id;commitArt()};
+stickerKeys.forEach(key=>{const btn=document.createElement('button');btn.className='sticker-choice';btn.setAttribute('aria-label','添加'+EL[key].n+'贴纸');const b=B();put(b,key,200,200,290,false);const svg=makeSvg(b.out());paintRandom(svg);btn.appendChild(svg);btn.onclick=()=>{snapshotArt();const t={id:nextId(),key,x:viewX+200/zoom,y:viewY+200/zoom,size:80};artFor(cur.id).stickers.push(t);selectedSticker=t.id;commitArt();toast('拖动贴纸，把它放到喜欢的位置 ✨')};$('stickerTray').appendChild(btn)});
+function syncStickerControls(){}
 function applyView(){const span=400/zoom;viewX=Math.max(0,Math.min(400-span,viewX));viewY=Math.max(0,Math.min(400-span,viewY));$('canvas').setAttribute('viewBox',[viewX,viewY,span,span].join(' '));$('zoomLabel').textContent=Math.round(zoom*100)+'%'}
 function changeZoom(n){const centerX=viewX+200/zoom,centerY=viewY+200/zoom;zoom=Math.max(1,Math.min(4,n));viewX=centerX-200/zoom;viewY=centerY-200/zoom;applyView()}
 $('zoomIn').onclick=()=>changeZoom(zoom*1.4);$('zoomOut').onclick=()=>changeZoom(zoom/1.4);$('zoomReset').onclick=()=>{zoom=1;viewX=viewY=0;applyView()};
