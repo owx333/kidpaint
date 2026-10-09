@@ -1,5 +1,5 @@
 /* Read only numeric aggregate counters; no remote executable script. */
-(()=>{const ids=['busuanzi_site_pv','busuanzi_site_uv','busuanzi_today_pv','busuanzi_today_uv'],status=document.getElementById('visitorStatsStatus');
+(()=>{const ids=['busuanzi_site_pv'],status=document.getElementById('visitorStatsStatus');
 function unavailable(reason){ids.forEach(id=>document.getElementById(id).textContent='暂不可用');status.textContent=reason+'，稍后重新打开网站查看。'}
 function display(data){let valid=0;for(const id of ids){const raw=data[id],value=(typeof raw==='number'||typeof raw==='string'&&/^\d+$/.test(raw))?Number(raw):NaN;if(Number.isSafeInteger(value)&&value>=0){document.getElementById(id).textContent=value.toLocaleString('zh-CN');valid++}else document.getElementById(id).textContent='暂不可用'}status.textContent=valid===ids.length?'✓ 真实统计已更新 · 数据由不蒜子提供':'统计服务返回了部分数据，缺失数据暂不显示。'}
 if(location.hostname!=='www.kidpaint.my'&&location.hostname!=='kidpaint.my'){unavailable('统计仅在正式网站启用');return}if(navigator.onLine===false){unavailable('离线时无法读取访问统计');return}
