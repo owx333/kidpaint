@@ -1192,7 +1192,8 @@ const floats=[['fl1','butterfly'],['fl2','rocket'],['fl3','sun']].map(([id,pid])
 setInterval(()=>{if($('scr-cover').hidden||reduce)return;const s=rand(floats),rs=s.querySelectorAll('.r');rs[Math.floor(Math.random()*rs.length)].setAttribute('fill',rand(VIVID))},700);
 function renderCover(){
   const n=totalStars();
-  $('coverRank').innerHTML=n?`你已经收集了 <b>★ ${n}</b> 颗星星，现在是「<b>${rankOf(n)}</b>」`:'第一次来？先选一个难度试试吧！';
+  $('coverRank').hidden=!n;
+  $('coverRank').innerHTML=n?`你已经收集了 <b>★ ${n}</b> 颗星星，现在是「<b>${rankOf(n)}</b>」`:'';
 }
 $('coverStart').onclick=()=>{SFX.start();renderLevels();show('scr-level')};
 
