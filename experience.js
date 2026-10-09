@@ -28,3 +28,9 @@ const focusCloseFinish=closeFinish;closeFinish=function(){focusCloseFinish();if(
 function saveBeforeLeaving(){if(cur&&document.documentElement.classList.contains('studio-active')){if(gesture){gesture=null;pointers.clear();pinch=null;commitArt()}else saveState()}}
 addEventListener('pagehide',saveBeforeLeaving);document.addEventListener('visibilitychange',()=>{if(document.hidden)saveBeforeLeaving()});
 canvas.addEventListener('lostpointercapture',e=>{if(pointers.has(e.pointerId))endPointer(e)});
+
+// Avoid paint feedback/layout reads while fingers are zooming the artwork.
+canvas.addEventListener('pointerdown',()=>{if(pointers.size===2||gesture?.kind==='pan')document.documentElement.classList.add('canvas-gesturing')});
+function finishCanvasGesture(){if(!pinch&&gesture?.kind!=='pan')document.documentElement.classList.remove('canvas-gesturing')}
+canvas.addEventListener('pointerup',finishCanvasGesture);canvas.addEventListener('pointercancel',finishCanvasGesture);canvas.addEventListener('lostpointercapture',finishCanvasGesture);
+const smoothShow=show;show=function(id){flushView();document.documentElement.classList.remove('canvas-gesturing');smoothShow(id)};

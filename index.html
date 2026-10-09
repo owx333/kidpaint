@@ -337,6 +337,8 @@ button:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
 .studio-active .stage>*{grid-column:1}.studio-active .save-status{grid-row:6}.studio-active .sticker-tray{grid-row:5}#resumeArt{max-width:100%;white-space:normal;line-height:1.4}
 
 #grid .card{content-visibility:auto;contain-intrinsic-size:auto 350px} .pick-filters input:focus-visible,.pick-filters select:focus-visible,.finish-close:focus-visible{outline:3px solid #7445b8;outline-offset:3px}@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important}}
+
+.studio-active .blob,.studio-active .sparkles{display:none}.studio-active .glass{backdrop-filter:none;-webkit-backdrop-filter:none}.studio-active .board{contain:layout paint}.studio-active .board .r{transition:none}.canvas-gesturing #canvas{box-shadow:none}.canvas-gesturing #canvas .paint-pop{animation:none}
 </style>
 </head>
 <body>
@@ -1476,27 +1478,28 @@ $('tBrush').onclick=()=>setTool('brush');$('tSticker').onclick=()=>setTool('stic
 const stickerKeys=['cat','bunny','butterfly','rainbow','star','heart','flower','rocket','gift','balloon','sun','unicorn'];let uid=0;const nextId=()=>Date.now().toString(36)+'-'+(++uid);
 stickerKeys.forEach(key=>{const btn=document.createElement('button');btn.className='sticker-choice';btn.setAttribute('aria-label','添加'+EL[key].n+'贴纸');const b=B();put(b,key,200,200,290,false);const svg=makeSvg(b.out());paintRandom(svg);btn.appendChild(svg);btn.onclick=()=>{snapshotArt();const t={id:nextId(),key,x:viewX+200/zoom,y:viewY+200/zoom,size:80};artFor(cur.id).stickers.push(t);selectedSticker=t.id;commitArt();toast('拖动贴纸，把它放到喜欢的位置 ✨')};$('stickerTray').appendChild(btn)});
 function syncStickerControls(){}
+let viewFrame=0;function queueView(){if(!viewFrame)viewFrame=requestAnimationFrame(()=>{viewFrame=0;applyView()})}function flushView(){if(viewFrame){cancelAnimationFrame(viewFrame);viewFrame=0;applyView()}}
 function applyView(){const span=400/zoom;viewX=Math.max(0,Math.min(400-span,viewX));viewY=Math.max(0,Math.min(400-span,viewY));$('canvas').setAttribute('viewBox',[viewX,viewY,span,span].join(' '));$('zoomLabel').textContent=Math.round(zoom*100)+'%'}
-function changeZoom(n){const centerX=viewX+200/zoom,centerY=viewY+200/zoom;zoom=Math.max(1,Math.min(4,n));viewX=centerX-200/zoom;viewY=centerY-200/zoom;applyView()}
+function changeZoom(n){flushView();const centerX=viewX+200/zoom,centerY=viewY+200/zoom;zoom=Math.max(1,Math.min(4,n));viewX=centerX-200/zoom;viewY=centerY-200/zoom;applyView()}
 $('zoomIn').onclick=()=>changeZoom(zoom*1.4);$('zoomOut').onclick=()=>changeZoom(zoom/1.4);$('zoomReset').onclick=()=>{zoom=1;viewX=viewY=0;applyView()};
 const canvas=$('canvas'),pointers=new Map();let gesture=null,pinch=null,suppressCanvasClick=0;
 function canvasPoint(e){const pt=canvas.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;return pt.matrixTransform(canvas.getScreenCTM().inverse())}
 canvas.addEventListener('pointerdown',e=>{if(e.button!==0||pointers.size>=2)return;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
- if(pointers.size===2){for(const id of pointers.keys())canvas.setPointerCapture(id);suppressCanvasClick=Date.now()+600;if(gesture&&gesture.kind!=='pan'){const h=history.pop();if(h?.art)creative[cur.id]=h.art;decorateSvg(canvas,cur.id);updateUndo()}gesture=null;const p=[...pointers.values()],rect=canvas.getBoundingClientRect(),cx=(p[0].x+p[1].x)/2,cy=(p[0].y+p[1].y)/2;pinch={distance:Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y),zoom,worldX:viewX+(cx-rect.left)*400/zoom/rect.width,worldY:viewY+(cy-rect.top)*400/zoom/rect.height};return}
+ if(pointers.size===2){for(const id of pointers.keys())canvas.setPointerCapture(id);suppressCanvasClick=Date.now()+600;if(gesture&&gesture.kind!=='pan'){const h=history.pop();if(h?.art)creative[cur.id]=h.art;decorateSvg(canvas,cur.id);updateUndo()}gesture=null;const p=[...pointers.values()],rect=canvas.getBoundingClientRect(),cx=(p[0].x+p[1].x)/2,cy=(p[0].y+p[1].y)/2;pinch={rect,distance:Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y),zoom,worldX:viewX+(cx-rect.left)*400/zoom/rect.width,worldY:viewY+(cy-rect.top)*400/zoom/rect.height};return}
  const pt=canvasPoint(e),st=e.target.closest('[data-sticker]'),path=e.target.closest('[data-creative-path]');
  if(tool==='erase'&&(st||path)){if(typeof layerState==='function'&&layerState(cur.id)[st?'stickers':'paint'].locked)return;snapshotArt();if(st)artFor(cur.id).stickers=artFor(cur.id).stickers.filter(t=>t.id!==st.dataset.sticker);else artFor(cur.id).paths=artFor(cur.id).paths.filter(p=>p.id!==path.dataset.creativePath);selectedSticker=null;commitArt();return}
  if(['brush','rainbow','gradient'].includes(tool)){if(typeof layerState==='function'&&layerState(cur.id).paint.locked)return;snapshotArt();if(tool==='gradient')artFor(cur.id).gradientColor=color;const p={id:nextId(),d:'M'+pt.x.toFixed(1)+' '+pt.y.toFixed(1)+'l.01 .01',color,mode:tool,width:+$('brushSize').value};artFor(cur.id).paths.push(p);gesture={kind:'brush',path:p};decorateSvg(canvas,cur.id)}
  else if(tool==='sticker'&&st){if(typeof layerState==='function'&&layerState(cur.id).stickers.locked)return;selectedSticker=st.dataset.sticker;snapshotArt();const t=artFor(cur.id).stickers.find(t=>t.id===selectedSticker);gesture={kind:'sticker',t,dx:pt.x-t.x,dy:pt.y-t.y};decorateSvg(canvas,cur.id);syncStickerControls()}
- else if(tool==='pan'){gesture={kind:'pan',x:e.clientX,y:e.clientY,vx:viewX,vy:viewY}}
+ else if(tool==='pan'){gesture={kind:'pan',rect:canvas.getBoundingClientRect(),x:e.clientX,y:e.clientY,vx:viewX,vy:viewY}}
  else if(tool==='sticker'){selectedSticker=null;decorateSvg(canvas,cur.id);syncStickerControls()}
  if(gesture)canvas.setPointerCapture(e.pointerId);
 });
-canvas.addEventListener('pointermove',e=>{if(!pointers.has(e.pointerId))return;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pinch&&pointers.size===2){const p=[...pointers.values()],rect=canvas.getBoundingClientRect(),cx=(p[0].x+p[1].x)/2,cy=(p[0].y+p[1].y)/2;zoom=Math.max(1,Math.min(4,pinch.zoom*Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y)/Math.max(1,pinch.distance)));viewX=pinch.worldX-(cx-rect.left)*400/zoom/rect.width;viewY=pinch.worldY-(cy-rect.top)*400/zoom/rect.height;applyView();return}if(!gesture)return;const pt=canvasPoint(e);
+canvas.addEventListener('pointermove',e=>{if(!pointers.has(e.pointerId))return;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pinch&&pointers.size===2){const p=[...pointers.values()],rect=pinch.rect,cx=(p[0].x+p[1].x)/2,cy=(p[0].y+p[1].y)/2;zoom=Math.max(1,Math.min(4,pinch.zoom*Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y)/Math.max(1,pinch.distance)));viewX=pinch.worldX-(cx-rect.left)*400/zoom/rect.width;viewY=pinch.worldY-(cy-rect.top)*400/zoom/rect.height;queueView();return}if(!gesture)return;const pt=gesture.kind==='pan'?null:canvasPoint(e);
  if(gesture.kind==='brush'){gesture.path.d+='L'+pt.x.toFixed(1)+' '+pt.y.toFixed(1);canvas.querySelector('[data-creative-path="'+gesture.path.id+'"]').setAttribute('d',gesture.path.d)}
  else if(gesture.kind==='sticker'){gesture.t.x=Math.max(15,Math.min(385,pt.x-gesture.dx));gesture.t.y=Math.max(15,Math.min(385,pt.y-gesture.dy));canvas.querySelector('[data-sticker="'+gesture.t.id+'"]').setAttribute('transform','translate('+gesture.t.x+' '+gesture.t.y+') rotate('+(gesture.t.rotation||0)+')')}
- else {const rect=canvas.getBoundingClientRect();viewX=gesture.vx-(e.clientX-gesture.x)*400/zoom/rect.width;viewY=gesture.vy-(e.clientY-gesture.y)*400/zoom/rect.height;applyView()}
+ else {const rect=gesture.rect;viewX=gesture.vx-(e.clientX-gesture.x)*400/zoom/rect.width;viewY=gesture.vy-(e.clientY-gesture.y)*400/zoom/rect.height;queueView()}
 });
-function endPointer(e){if(pinch)suppressCanvasClick=Date.now()+600;pointers.delete(e.pointerId);if(gesture&&gesture.kind!=='pan'){commitArt();if(gesture.kind==='brush'){addRecent(color);if(artFor(cur.id).paths.length===1)toast('第一笔想象出现啦！大胆画下去 ✨')}}gesture=null;if(pointers.size<2)pinch=null}
+function endPointer(e){flushView();if(pinch)suppressCanvasClick=Date.now()+600;pointers.delete(e.pointerId);if(gesture&&gesture.kind!=='pan'){commitArt();if(gesture.kind==='brush'){addRecent(color);if(artFor(cur.id).paths.length===1)toast('第一笔想象出现啦！大胆画下去 ✨')}}gesture=null;if(pointers.size<2)pinch=null}
 canvas.addEventListener('pointerup',endPointer);canvas.addEventListener('pointercancel',endPointer);
 
 paintHud();renderCover();renderDock();
