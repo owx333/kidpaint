@@ -33,3 +33,9 @@ GitHub Pages 使用 main 分支和仓库根目录；已有 CNAME 域名配置保
 正式网址为 https://www.kidpaint.my/ 。robots.txt 允许抓取，sitemap.xml 只列出真实的首页网址；应用内部画布和主题界面不伪造为独立页面。
 
 可以在 Google Search Console 验证该域名或网址前缀，提交 https://www.kidpaint.my/sitemap.xml 并请求首页编入索引。本站未加入任何虚构评分，也不承诺搜索排名或收录时间。
+
+## 小画家名字与精品画廊
+
+可选昵称仅保存在当前设备。每幅作品可独立填写署名，并决定下载图片是否显示名字；画册备份保留署名。画布采用柔和彩纸样式。
+
+新增 24 幅可点选填色的主题插画，原有 600 幅的编号和保存进度不变。主角矢量插画改编自 Twemoji，图形为 CC BY 4.0；完整来源、改编说明与许可见 art-credits.html 和 assets/art-source/LICENSE-GRAPHICS。包含这些插画的 PNG 下载页脚带来源署名。
