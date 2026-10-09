@@ -7,23 +7,20 @@ function refreshArtist(){ $('artistHud').hidden=!artistProfile.name;$('artistHud
 $('artistForm').onsubmit=e=>{e.preventDefault();artistProfile.name=cleanArtistName($('artistName').value);lastBlob=null;if(!save(KEY+'-artist',artistProfile)){toast('名字暂时没能保存，请在首页再试一次');return}refreshArtist();toast(artistProfile.name?'欢迎你，'+artistProfile.name+'！':'名字已清空，随时可以再填写')};
 /* KidPaint: accessible studio, dependable local storage, worlds and offline use. */
 const cloneData=value=>JSON.parse(JSON.stringify(value));
-let playgroundPrefs=Object.assign({reduceMotion:matchMedia('(prefers-reduced-motion: reduce)').matches,largeButtons:true,colorNames:true},load(KEY+'-accessibility',{}));
+let playgroundPrefs={reduceMotion:matchMedia('(prefers-reduced-motion: reduce)').matches,largeButtons:true,colorNames:true};
 const COLOR_NAMES={'#FF4D6D':'玫红','#FF8C2E':'橙色','#FFD23F':'黄色','#2BD48F':'绿色','#2EB6FF':'天蓝','#4D6BFF':'蓝色','#9B5CFF':'紫色','#FFFFFF':'白色','#2A1B5E':'深紫'};
 const QUICK_COLORS=Object.keys(COLOR_NAMES);
-function applyPreferences(){reduce=!!playgroundPrefs.reduceMotion;document.documentElement.classList.toggle('quiet-motion',reduce);document.documentElement.classList.toggle('large-controls',!!playgroundPrefs.largeButtons);document.documentElement.classList.toggle('named-colors',!!playgroundPrefs.colorNames);if(reduce)stopCelebration();$('reduceMotion').checked=reduce;$('largeButtons').checked=playgroundPrefs.largeButtons;$('colorNames').checked=playgroundPrefs.colorNames;renderQuickColors()}
+function applyPreferences(){reduce=!!playgroundPrefs.reduceMotion;document.documentElement.classList.toggle('quiet-motion',reduce);document.documentElement.classList.toggle('large-controls',!!playgroundPrefs.largeButtons);document.documentElement.classList.toggle('named-colors',!!playgroundPrefs.colorNames);if(reduce)stopCelebration();renderQuickColors()}
 function renderQuickColors(){const host=$('quickColors');host.replaceChildren();QUICK_COLORS.forEach(c=>{const b=document.createElement('button');b.className='quick-color';b.style.setProperty('--swatch',c);b.setAttribute('aria-label',COLOR_NAMES[c]);b.setAttribute('aria-pressed',String(color===c));b.title=COLOR_NAMES[c];b.innerHTML='<i aria-hidden="true"></i><span>'+COLOR_NAMES[c]+'</span>';b.onclick=()=>{color=c;if(!['brush','rainbow','gradient'].includes(tool))setTool('fill');renderDock();renderQuickColors();SFX.select()};host.appendChild(b)})}
 const originalPickColor=pick2;pick2=function(c){const prior=tool;originalPickColor(c);if(['rainbow','gradient'].includes(prior))setTool(prior);renderQuickColors()};
 const originalSetTool=setTool;setTool=function(t){if(t==='brush'||t==='rainbow'||t==='gradient'){if(layerState(cur?.id).paint.locked){toast('画笔图层锁住了，先解锁再画吧');return}}if(t==='sticker'&&layerState(cur?.id).stickers.locked){toast('贴纸图层锁住了，先解锁再调整吧');return}originalSetTool(t);$('tRainbow').setAttribute('aria-pressed',String(t==='rainbow'));renderQuickColors()};
 $('tRainbow').onclick=()=>setTool('rainbow');
-['reduceMotion','largeButtons','colorNames'].forEach(id=>$(id).onchange=()=>{playgroundPrefs[id==='reduceMotion'?'reduceMotion':id]= $(id).checked;save(KEY+'-accessibility',playgroundPrefs);applyPreferences()});
-let settingsReturn=null,guideReturn=null;
-function openSettings(){settingsReturn=document.activeElement;$('settings').hidden=false;$('settingsClose').focus()}
-function closeSettings(){$('settings').hidden=true;settingsReturn?.focus()}
+let guideReturn=null;
 function openGuide(){guideReturn=document.activeElement;$('guide').hidden=false;$('guideClose').focus()}
 function closeGuide(){save(KEY+'-guided',true);$('guide').hidden=true;guideReturn?.focus()}
-$('settingsOpen').onclick=openSettings;$('settingsClose').onclick=closeSettings;$('guideOpen').onclick=$('guideFromSettings').onclick=openGuide;$('guideClose').onclick=closeGuide;
-$('settings').onclick=e=>{if(e.target===$('settings'))closeSettings()};$('guide').onclick=e=>{if(e.target===$('guide'))closeGuide()};
-addEventListener('keydown',e=>{const modal=!$('guide').hidden?$('guide'):!$('settings').hidden?$('settings'):null;if(!modal)return;if(e.key==='Escape'){e.preventDefault();modal.id==='guide'?closeGuide():closeSettings()}if(e.key==='Tab'){const nodes=[...modal.querySelectorAll('button,input,select,[tabindex="0"]')].filter(el=>!el.hidden&&!el.disabled);const first=nodes[0],last=nodes.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}});
+$('guideOpen').onclick=openGuide;$('guideClose').onclick=closeGuide;
+$('guide').onclick=e=>{if(e.target===$('guide'))closeGuide()};
+addEventListener('keydown',e=>{const modal=!$('guide').hidden?$('guide'):null;if(!modal)return;if(e.key==='Escape'){e.preventDefault();closeGuide()}if(e.key==='Tab'){const nodes=[...modal.querySelectorAll('button,input,select,[tabindex="0"]')].filter(el=>!el.hidden&&!el.disabled);const first=nodes[0],last=nodes.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}});
 function layerState(id){return {drawing:{visible:true,locked:false},paint:{visible:true,locked:false},stickers:{visible:true,locked:false}}}
 function drawingLocked(){return !!cur&&layerState(cur.id).drawing.locked}
 function rememberState(){return {fills:regions.map(el=>el.getAttribute('fill')),art:cloneData(artFor(cur.id))}}
@@ -77,4 +74,4 @@ if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){navigator.
 
 $('coverStart').onclick=()=>{SFX.start();ui.cat='stories';pickWorld=null;onlyMyArt=false;pickPageLimit=12;saveUi();renderPick();show('scr-pick')};
 
-$('homeLogo').onclick=()=>{if(cur&&!$('color').hidden){if(gesture&&gesture.kind!=='pan')commitArt();saveState()}pointers.clear();gesture=null;pinch=null;closeSheet();closeFinish();if(!$('guide').hidden)closeGuide();if(!$('settings').hidden)closeSettings();document.querySelector('.zoom-tools').open=false;renderCover();refreshArtist();refreshResume();show('scr-cover');$('coverStart').focus({preventScroll:true})};
+$('homeLogo').onclick=()=>{if(cur&&!$('color').hidden){if(gesture&&gesture.kind!=='pan')commitArt();saveState()}pointers.clear();gesture=null;pinch=null;closeSheet();closeFinish();if(!$('guide').hidden)closeGuide();document.querySelector('.zoom-tools').open=false;renderCover();refreshArtist();refreshResume();show('scr-cover');$('coverStart').focus({preventScroll:true})};

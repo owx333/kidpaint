@@ -331,6 +331,7 @@ button:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
 @media(max-width:760px){.bar-top .artist-hud{order:1;flex-basis:100%;max-width:100%;text-align:center;font-size:17px;line-height:1.4}}
 .zoom-tools{position:relative;margin-left:auto}.zoom-tools>summary{cursor:pointer;font-weight:800;font-size:14px;padding:10px;list-style:none;background:#fff;border-radius:14px;min-height:44px;box-sizing:border-box}.zoom-options{position:absolute;right:0;top:100%;z-index:8;display:flex;align-items:center;gap:6px;flex-wrap:wrap;background:#fffaf3;box-shadow:0 10px 25px #49327033;border:2px solid white;border-radius:18px;padding:12px;min-width:240px}.studio-extra{padding:7px;gap:6px}.studio-extra>.tool{flex:1;font-size:14px;padding:10px 6px}.sticker-tray{max-height:145px;overflow:auto;padding:8px}.studio-tip{font-size:12px}
 .brand-home{display:inline-flex;align-items:center;gap:10px;border:0;background:transparent;padding:0;min-height:44px;cursor:pointer;color:inherit;font:inherit;flex-shrink:0}.brand-home:focus-visible{outline:3px solid #9b5cff;outline-offset:4px;border-radius:10px}@media(max-width:560px){.brand-home{gap:6px}}
+@media(max-width:760px){.bar-top{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:6px 10px;align-items:center;padding:8px 12px}.bar-top .brand-home{grid-column:1;grid-row:1;min-width:0}.bar-top .spacer{display:none}.bar-top .stars-hud{grid-column:2;grid-row:1}.bar-top #musicToggle{grid-column:3;grid-row:1}.bar-top .artist-hud{grid-column:1 / -1;grid-row:2;order:initial;max-width:100%;width:100%;min-width:0;font-size:16px;text-align:center;padding:2px 0;box-sizing:border-box;line-height:1.5}.bar-top .logo-word{font-size:18px}}
 </style>
 </head>
 <body>
@@ -341,9 +342,9 @@ button:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
     <button type="button" class="brand-home" id="homeLogo" aria-label="KidPaint，回到主页" title="回到主页"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="mk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF4D6D"/><stop offset=".35" stop-color="#FFD23F"/><stop offset=".65" stop-color="#2BD48F"/><stop offset="1" stop-color="#4D6BFF"/></linearGradient></defs>
       <path d="M16 2C11 10 6 15 6 21a10 10 0 0 0 20 0C26 15 21 10 16 2Z" fill="url(#mk)"/><circle cx="12.5" cy="21" r="1.8" fill="#2A1B5E"/><circle cx="19.5" cy="21" r="1.8" fill="#2A1B5E"/><path d="M13.5 25q2.5 2.4 5 0" stroke="#2A1B5E" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
     <span class="logo-word" aria-label="KidPaint"><span>K</span><span>i</span><span>d</span><span>P</span><span>a</span><span>i</span><span>n</span><span>t</span></span><span class="logo-zh">童彩乐园</span></button>
-    <span class="spacer"></span><button class="icon-btn" id="settingsOpen" aria-label="打开使用设置">⚙</button>
+    <span class="spacer"></span>
     <span class="stars-hud" id="hud" title="收集到的星星">★ <b id="starCount">0</b></span>
-    <span id="artistHud" class="artist-hud" hidden aria-live="polite"></span><button class="icon-btn" id="musicToggle" aria-label="播放儿童背景音乐" aria-pressed="false" title="播放背景音乐">🎵</button><button class="icon-btn" id="soundBtn" aria-label="关闭操作音效" title="操作音效">🔊</button>
+    <span id="artistHud" class="artist-hud" hidden aria-live="polite"></span><button class="icon-btn" id="musicToggle" aria-label="播放儿童背景音乐" aria-pressed="false" title="播放背景音乐">🎵</button>
   </nav>
 
   <!-- 1. cover -->
@@ -356,7 +357,7 @@ button:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
     <h1 class="cover-title">把想象，涂成彩虹！</h1>
     <p class="cover-sub">点一点，涂一涂，你的奇妙世界就出现啦！</p>
     <div class="cover-features"><span>🖍 自由配色</span><span>🌟 收集创作星星</span><span>🎁 带走你的作品</span></div><button class="btn mega primary pulse" id="coverStart">🎨 开始彩色冒险</button>
-    <div class="center" style="gap:10px;flex-wrap:wrap"><button class="btn" id="coverBlank">🖌 自由画一张</button><button class="btn" id="coverGallery">🖼 我的小画展</button></div><button class="btn primary" id="worldOpen">🗺 探索彩色世界</button><button class="btn" id="resumeArt" hidden>🖍 继续上次创作</button><details class="name-details"><summary>🌟 填写／修改小画家名字</summary><form class="artist-form" id="artistForm"><label for="artistName">🌟 小画家的名字／昵称</label><div><input id="artistName" name="nickname" type="text" maxlength="20" autocomplete="nickname" placeholder="例如：小彩虹（可不填）"><button class="btn small" type="submit">记住名字</button></div><small id="artistWelcome" role="status">名字只保存在这台设备，不需要注册。</small></form></details><p class="cover-rank" id="coverRank"></p><details class="home-info"><summary>认识 KidPaint 童彩乐园</summary><div class="home-info-body"><h2>让孩子自由创作的免费彩绘乐园</h2><p>KidPaint 童彩乐园提供免费的儿童在线涂色与绘画体验，无需注册。在电脑、手机或平板上，孩子可以给图画和背景填色，用自由画笔、彩虹笔、渐变笔和贴纸创造自己的作品。</p><p>动物森林、海底王国、星空旅行、甜点乐园、彩虹小镇和魔法故事，带来不同的创作灵感。任务可以跳过，没有倒计时；每一种想象都值得鼓励。</p><h3>需要注册或付费吗？</h3><p>不需要。打开网站即可免费开始填色与绘画。</p><h3>作品怎样保存？</h3><p>作品自动保存在当前浏览器，可以继续修改、下载 PNG 图片，也可以到小画展导出整本画册，在另一台设备导入。清理浏览器数据前，请先导出备份。</p><h3>手机和平板可以使用吗？</h3><p>可以。画布支持双指缩放与移动，并提供大按钮、颜色名称和减少动画选项。</p><h3>断网还能画画吗？</h3><p>首次联网并完成离线缓存后，可以继续创作和听背景音乐。可在设置中查看离线准备状态。</p><p class="home-footer">KidPaint 童彩乐园 · <a href="https://www.kidpaint.my/">www.kidpaint.my</a></p></div></details>
+    <div class="center" style="gap:10px;flex-wrap:wrap"><button class="btn" id="coverBlank">🖌 自由画一张</button><button class="btn" id="coverGallery">🖼 我的小画展</button></div><button class="btn primary" id="worldOpen">🗺 探索彩色世界</button><button class="btn" id="resumeArt" hidden>🖍 继续上次创作</button><details class="name-details"><summary>🌟 填写／修改小画家名字</summary><form class="artist-form" id="artistForm"><label for="artistName">🌟 小画家的名字／昵称</label><div><input id="artistName" name="nickname" type="text" maxlength="20" autocomplete="nickname" placeholder="例如：小彩虹（可不填）"><button class="btn small" type="submit">记住名字</button></div><small id="artistWelcome" role="status">名字只保存在这台设备，不需要注册。</small></form></details><p class="cover-rank" id="coverRank"></p><details class="home-info"><summary>认识 KidPaint 童彩乐园</summary><div class="home-info-body"><h2>让孩子自由创作的免费彩绘乐园</h2><p>KidPaint 童彩乐园提供免费的儿童在线涂色与绘画体验，无需注册。在电脑、手机或平板上，孩子可以给图画和背景填色，用自由画笔、彩虹笔、渐变笔和贴纸创造自己的作品。</p><p>动物森林、海底王国、星空旅行、甜点乐园、彩虹小镇和魔法故事，带来不同的创作灵感。任务可以跳过，没有倒计时；每一种想象都值得鼓励。</p><h3>需要注册或付费吗？</h3><p>不需要。打开网站即可免费开始填色与绘画。</p><h3>作品怎样保存？</h3><p>作品自动保存在当前浏览器，可以继续修改、下载 PNG 图片，也可以到小画展导出整本画册，在另一台设备导入。清理浏览器数据前，请先导出备份。</p><h3>手机和平板可以使用吗？</h3><p>可以。画布支持双指缩放与移动，并提供大按钮、颜色名称和减少动画选项。</p><h3>断网还能画画吗？</h3><p>首次联网并完成离线缓存后，可以继续创作和听背景音乐。可在设置中查看离线准备状态。</p><p id="offlineStatus" role="status">离线准备中…</p><p class="home-footer">KidPaint 童彩乐园 · <a href="https://www.kidpaint.my/">www.kidpaint.my</a></p></div></details>
   </section>
 
   <!-- 2. level select -->
@@ -445,7 +446,7 @@ button:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
     </div>
   </div>
 </div>
-<div class="settings-overlay" id="settings" hidden role="dialog" aria-modal="true" aria-labelledby="settingsTitle"><div class="settings-card glass"><div class="top"><h2 id="settingsTitle">让创作更舒服</h2><button class="btn" id="settingsClose">完成</button></div><label class="setting-row"><input type="checkbox" id="reduceMotion"> 减少动画和烟花</label><label class="setting-row"><input type="checkbox" id="largeButtons"> 大按钮，更容易点</label><label class="setting-row"><input type="checkbox" id="colorNames"> 显示颜色名字</label><p id="offlineStatus" role="status">离线准备中…</p><button class="btn" id="guideFromSettings">💡 再看一次玩法</button><p class="hint">作品保存在这个浏览器中。建议定期到小画展导出画册。</p></div></div><div class="guide-overlay" id="guide" hidden role="dialog" aria-modal="true" aria-labelledby="guideTitle"><div class="guide-card"><h2 id="guideTitle">三步开始你的彩色世界</h2><div class="guide-demo" aria-hidden="true"><span class="demo-color"></span><span class="demo-finger">☝</span><span class="demo-art">🌸</span></div><ol><li>点颜色，再点图画的空白处。</li><li>试试画笔和彩虹笔，添上自己的想象。</li><li>点完成，把作品放进小画展。</li></ol><p>双指可以放大和移动；画错了，用撤销就好。</p><button class="btn primary" id="guideClose">我来试试！</button></div></div><canvas id="fx"></canvas>
+<div class="guide-overlay" id="guide" hidden role="dialog" aria-modal="true" aria-labelledby="guideTitle"><div class="guide-card"><h2 id="guideTitle">三步开始你的彩色世界</h2><div class="guide-demo" aria-hidden="true"><span class="demo-color"></span><span class="demo-finger">☝</span><span class="demo-art">🌸</span></div><ol><li>点颜色，再点图画的空白处。</li><li>试试画笔和彩虹笔，添上自己的想象。</li><li>点完成，把作品放进小画展。</li></ol><p>双指可以放大和移动；画错了，用撤销就好。</p><button class="btn primary" id="guideClose">我来试试！</button></div></div><canvas id="fx"></canvas>
 <div class="toast" id="toast" hidden></div>
 
 <script>
@@ -1113,7 +1114,7 @@ const savedSnapshot=load(KEY+'-snapshot',null);
 let store=savedSnapshot?.store||load(KEY,{})||{};
 let res=savedSnapshot?.stars||load(KEY+'-stars',{})||{};          // best stars per picture
 let ui=Object.assign({cat:'scene',lv:1},load(KEY+'-ui',{}));
-let muted=load(KEY+'-mute',false);
+let muted=false;
 const persist=()=>save(KEY,store),saveUi=()=>save(KEY+'-ui',ui),saveRes=()=>save(KEY+'-stars',res);
 let cur=null,regions=[],history=[],redoStack=[],color='#E8433F',tool='fill',recent=[],done=false,lastBlob=null;
 const $=id=>document.getElementById(id);
@@ -1170,9 +1171,6 @@ const SFX={
   star:i=>{tone(880+i*220,.3,'sine',.14);tone(1320+i*330,.24,'sine',.06,.05)},
   win:()=>[523,659,784,1047,784,1047].forEach((fq,i)=>tone(fq,.24,'triangle',.1,i*.12)),
 };
-function paintSoundBtn(){$('soundBtn').textContent=muted?'🔇':'🔊';$('soundBtn').setAttribute('aria-label',muted?'打开操作音效':'关闭操作音效')}
-$('soundBtn').onclick=()=>{muted=!muted;save(KEY+'-mute',muted);paintSoundBtn();SFX.tap()};
-paintSoundBtn();
 
 /* ================= stars & ranks ================= */
 const RANKS=[[0,'小小画家'],[6,'涂色新星'],[20,'色彩达人'],[45,'彩虹画师'],[90,'童彩大师']];
@@ -1501,6 +1499,7 @@ canvas.addEventListener('pointerup',endPointer);canvas.addEventListener('pointer
 
 paintHud();renderCover();renderDock();
 </script>
+<script src="catalog-refresh.js"></script>
 <script src="art-gallery.js"></script>
 <script src="story-art.js"></script>
 <script src="playground.js"></script>
