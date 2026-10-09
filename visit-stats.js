@@ -1,0 +1,8 @@
+/* Read only numeric aggregate counters; no remote executable script. */
+(()=>{const ids=['busuanzi_site_pv','busuanzi_site_uv','busuanzi_today_pv','busuanzi_today_uv'],status=document.getElementById('visitorStatsStatus');
+function unavailable(reason){ids.forEach(id=>document.getElementById(id).textContent='暂不可用');status.textContent=reason+'，稍后重新打开网站查看。'}
+function display(data){let valid=0;for(const id of ids){const raw=data[id],value=(typeof raw==='number'||typeof raw==='string'&&/^\d+$/.test(raw))?Number(raw):NaN;if(Number.isSafeInteger(value)&&value>=0){document.getElementById(id).textContent=value.toLocaleString('zh-CN');valid++}else document.getElementById(id).textContent='暂不可用'}status.textContent=valid===ids.length?'✓ 真实统计已更新 · 数据由不蒜子提供':'统计服务返回了部分数据，缺失数据暂不显示。'}
+if(location.hostname!=='www.kidpaint.my'&&location.hostname!=='kidpaint.my'){unavailable('统计仅在正式网站启用');return}if(navigator.onLine===false){unavailable('离线时无法读取访问统计');return}
+if(!window.kidpaintStatsRequest){let referrer='';try{if(document.referrer)referrer=new URL(document.referrer).origin+'/'}catch{}const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);window.kidpaintStatsRequest=fetch('https://cdn.busuanzi.cc/api.php',{method:'POST',credentials:'omit',referrerPolicy:'strict-origin-when-cross-origin',body:JSON.stringify({url:'https://www.kidpaint.my/',referrer}),signal:controller.signal}).then(response=>{if(!response.ok)throw Error('statistics unavailable');return response.json()}).finally(()=>clearTimeout(timer))}
+window.kidpaintStatsRequest.then(display).catch(()=>unavailable('暂时无法连接统计服务'));
+})();
