@@ -3,7 +3,7 @@ let artistProfile=Object.assign({name:''},load(KEY+'-artist',{}));
 const cleanArtistName=value=>Array.from(String(value||'').replace(/[\u0000-\u001F\u007F]/g,'').trim()).slice(0,20).join('');
 artistProfile.name=cleanArtistName(artistProfile.name);
 function signatureFor(id){const a=artFor(id);return a.showSignature===false?'':cleanArtistName(a.artistName===undefined?artistProfile.name:a.artistName)}
-function refreshArtist(){ $('artistName').value=artistProfile.name;$('artistWelcome').textContent=artistProfile.name?artistProfile.name+'，欢迎来到你的彩色世界！':'名字只保存在这台设备，不需要注册。';if(cur){$('artArtist').value=artFor(cur.id).artistName===undefined?artistProfile.name:artFor(cur.id).artistName;$('showSignature').checked=artFor(cur.id).showSignature!==false}}
+function refreshArtist(){ $('artistHud').hidden=!artistProfile.name;$('artistHud').textContent=artistProfile.name+' 小画家'; $('artistName').value=artistProfile.name;$('artistWelcome').textContent=artistProfile.name?artistProfile.name+'，欢迎来到你的彩色世界！':'名字只保存在这台设备，不需要注册。';if(cur){$('artArtist').value=artFor(cur.id).artistName===undefined?artistProfile.name:artFor(cur.id).artistName;$('showSignature').checked=artFor(cur.id).showSignature!==false}}
 $('artistForm').onsubmit=e=>{e.preventDefault();artistProfile.name=cleanArtistName($('artistName').value);if(!save(KEY+'-artist',artistProfile)){toast('名字暂时没能保存，可以直接在作品上填写');return}refreshArtist();toast(artistProfile.name?'欢迎你，'+artistProfile.name+'！':'名字已清空，随时可以再填写')};
 $('artArtist').onchange=()=>{if(!cur)return;artFor(cur.id).artistName=cleanArtistName($('artArtist').value);$('artArtist').value=artFor(cur.id).artistName;saveState()};$('showSignature').onchange=()=>{if(cur){artFor(cur.id).showSignature=$('showSignature').checked;saveState()}};
 /* KidPaint: accessible studio, dependable local storage, worlds and offline use. */
@@ -82,4 +82,5 @@ $('stickerTray').addEventListener('click',e=>{if(layerState(cur.id).stickers.loc
 applyPreferences();refreshResume();refreshArtist();
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){navigator.serviceWorker.register('./sw.js').then(async reg=>{const worker=reg.installing||reg.waiting||reg.active;if(worker&&worker.state!=='activated')worker.addEventListener('statechange',()=>{if(worker.state==='activated')$('offlineStatus').textContent='✓ 已准备好：下次断网也能画画和听音乐'});else $('offlineStatus').textContent='✓ 已准备好：断网也能继续创作'}).catch(()=>$('offlineStatus').textContent='离线准备暂未完成，联网时仍可使用')}else $('offlineStatus').textContent='发布到网站后可准备离线使用';
 
-$('featuredStart').onclick=()=>{ui.cat='featured';ui.lv=1;pickWorld=null;onlyMyArt=false;pickPageLimit=12;saveUi();renderPick();show('scr-pick')};
+
+$('coverStart').onclick=()=>{SFX.start();ui.cat='stories';pickWorld=null;onlyMyArt=false;pickPageLimit=12;saveUi();renderPick();show('scr-pick')};

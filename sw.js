@@ -1,6 +1,6 @@
 /* Versioned offline assets. Artwork stays in local browser storage. */
-const CACHE='kidpaint-67bc60d8a7ca57';
-const CORE=["./index.html","./playground.js","./art-gallery.js","./art-credits.html","./assets/art-source/LICENSE-GRAPHICS","./manifest.webmanifest","./assets/app-icon.svg","./assets/app-icon-192.png","./assets/app-icon-512.png","./favicon.svg","./favicon.ico","./favicon-48.png","./favicon-96.png","./apple-touch-icon.png","./assets/brand-hero.webp","./assets/brand-buddy.webp","./assets/mascot-girl.webp","./assets/mascot-boy.webp","./music/rainbow.mp3","./music/forest.mp3","./music/dream.mp3","./music/spring.mp3","./music/clouds.mp3"];
+const CACHE='kidpaint-72fc44f7e0d3f2';
+const CORE=["./index.html","./playground.js","./art-gallery.js","./story-art.js","./art-credits.html","./assets/art-source/LICENSE-GRAPHICS","./manifest.webmanifest","./assets/app-icon.svg","./assets/app-icon-192.png","./assets/app-icon-512.png","./favicon.svg","./favicon.ico","./favicon-48.png","./favicon-96.png","./apple-touch-icon.png","./assets/brand-hero.webp","./assets/brand-buddy.webp","./assets/mascot-girl.webp","./assets/mascot-boy.webp","./music/rainbow.mp3","./music/forest.mp3","./music/dream.mp3","./music/spring.mp3","./music/clouds.mp3"];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('kidpaint-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 async function offlineResponse(request){
