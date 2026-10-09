@@ -1,0 +1,13 @@
+/* Versioned offline assets. Artwork stays in local browser storage. */
+const CACHE='kidpaint-ebb621efe50d0e';
+const CORE=["./index.html","./playground.js","./manifest.webmanifest","./assets/app-icon.svg","./assets/brand-hero.webp","./assets/brand-buddy.webp","./assets/mascot-girl.webp","./assets/mascot-boy.webp","./music/rainbow.mp3","./music/forest.mp3","./music/dream.mp3","./music/spring.mp3","./music/clouds.mp3"];
+self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting())));
+self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('kidpaint-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
+async function offlineResponse(request){
+ const cache=await caches.open(CACHE);
+ if(request.mode==='navigate'){try{const response=await fetch(request);if(response.ok)await cache.put(new URL('./index.html',self.registration.scope).href,response.clone());return response}catch{const cached=await cache.match(new URL('./index.html',self.registration.scope).href);return cached||new Response('请先联网打开一次 KidPaint',{status:503,headers:{'Content-Type':'text/plain;charset=utf-8'}})}}
+ const cached=await cache.match(request.url);
+ if(cached){const range=request.headers.get('range');if(range){const data=await cached.arrayBuffer(),match=/^bytes=(\d*)-(\d*)$/.exec(range);if(!match)return new Response(null,{status:416,headers:{'Content-Range':'bytes */'+data.byteLength}});let start=match[1]?Number(match[1]):Math.max(0,data.byteLength-Number(match[2])),end=match[1]?(match[2]?Math.min(Number(match[2]),data.byteLength-1):data.byteLength-1):data.byteLength-1;if(start>end||start>=data.byteLength)return new Response(null,{status:416,headers:{'Content-Range':'bytes */'+data.byteLength}});const headers=new Headers(cached.headers);headers.set('Content-Range','bytes '+start+'-'+end+'/'+data.byteLength);headers.set('Content-Length',String(end-start+1));headers.set('Accept-Ranges','bytes');return new Response(data.slice(start,end+1),{status:206,headers})}return cached}
+ return fetch(request);
+}
+self.addEventListener('fetch',event=>{const url=new URL(event.request.url);if(event.request.method!=='GET'||url.origin!==self.location.origin||!url.href.startsWith(self.registration.scope))return;event.respondWith(offlineResponse(event.request))});
