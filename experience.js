@@ -34,3 +34,5 @@ canvas.addEventListener('pointerdown',()=>{if(pointers.size===2||gesture?.kind==
 function finishCanvasGesture(){if(!pinch&&gesture?.kind!=='pan')document.documentElement.classList.remove('canvas-gesturing')}
 canvas.addEventListener('pointerup',finishCanvasGesture);canvas.addEventListener('pointercancel',finishCanvasGesture);canvas.addEventListener('lostpointercapture',finishCanvasGesture);
 const smoothShow=show;show=function(id){flushView();document.documentElement.classList.remove('canvas-gesturing');smoothShow(id)};
+
+const balloonShow=show;show=function(id){document.documentElement.classList.toggle('home-background',id==='scr-cover');balloonShow(id)};document.documentElement.classList.toggle('home-background',!$('scr-cover').hidden);
