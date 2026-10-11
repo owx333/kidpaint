@@ -1,0 +1,146 @@
+[
+  {
+    "name": "Printable Coloring Pages",
+    "url": "https://printablecoloringpages.ai/",
+    "licenseUrl": "https://printablecoloringpages.ai/license/",
+    "status": "selected",
+    "reason": "CC0 explicitly permits modify, repost, embed and bundle. Each selected page also declares CC0; 160 candidate pages checked individually.",
+    "dateReviewed": "2026-10-11"
+  },
+  {
+    "name": "Openclipart",
+    "url": "https://openclipart.org/",
+    "licenseUrl": "https://openclipart.org/share",
+    "status": "eligible lead",
+    "reason": "Official FAQ describes CC0 uploads; no individual asset selected, so no item-level approval claimed.",
+    "dateReviewed": "2026-10-11"
+  },
+  {
+    "name": "FreeSVG",
+    "url": "https://freesvg.org/",
+    "licenseUrl": "https://freesvg.org/pages/integrations",
+    "status": "eligible lead",
+    "reason": "CC0 library lead; individual provenance and style still require review. No asset selected.",
+    "dateReviewed": "2026-10-11"
+  },
+  {
+    "name": "Wikimedia Commons",
+    "url": "https://commons.wikimedia.org/wiki/Category:Coloring_pages",
+    "licenseUrl": null,
+    "status": "per-file review required",
+    "reason": "Category mixes creators and licenses; no blanket license or individual approval claimed.",
+    "dateReviewed": "2026-10-11"
+  },
+  {
+    "name": "Free for Commercial Use",
+    "url": "https://freeforcommercialuse.net/",
+    "licenseUrl": null,
+    "status": "unverified",
+    "reason": "Page could not be accessed in this review; no assets used.",
+    "dateReviewed": "2026-10-11"
+  },
+  {
+    "name": "Coloring.page",
+    "url": "https://coloring.page/",
+    "licenseUrl": null,
+    "status": "unverified redistribution",
+    "reason": "Catalog accessible; public app redistribution permission not verified. No assets used.",
+    "dateReviewed": "2026-10-11"
+  },
+  {
+    "name": "Supercoloring",
+    "url": "https://www.supercoloring.com/",
+    "licenseUrl": null,
+    "status": "per-file review required",
+    "reason": "Requested terms route redirected to search. No selected asset license verified.",
+    "dateReviewed": "2026-10-11"
+  },
+  {
+    "name": "Hellokids",
+    "url": "https://www.hellokids.com/",
+    "licenseUrl": null,
+    "status": "unverified redistribution",
+    "reason": "Free online coloring is not itself redistribution permission. No assets used.",
+    "dateReviewed": "2026-10-11"
+  },
+  {
+    "name": "Twisty Noodle",
+    "url": "https://twistynoodle.com/",
+    "licenseUrl": "https://twistynoodle.com/terms_of_service/",
+    "status": "not selected",
+    "reason": "Terms require written consent for copying/distributing; no consent supplied.",
+    "dateReviewed": "2026-10-11"
+  },
+  {
+    "name": "SVG Repo",
+    "url": "https://www.svgrepo.com/",
+    "licenseUrl": "https://www.svgrepo.com/page/licensing/",
+    "status": "per-file review required",
+    "reason": "License varies by asset/collection; none selected, no blanket approval claimed.",
+    "dateReviewed": "2026-10-11"
+  },
+  {
+    "name": "Monday Mandala",
+    "url": "https://mondaymandala.com/",
+    "licenseUrl": "https://mondaymandala.com/licensing-policy/",
+    "status": "not selected",
+    "reason": "Personal-use license prohibits redistribution even for free.",
+    "dateReviewed": "2026-10-11"
+  },
+  {
+    "name": "Just Color",
+    "url": "https://www.justcolor.net/",
+    "licenseUrl": null,
+    "status": "unverified redistribution",
+    "reason": "Requested terms route unavailable; no individual redistribution grant verified.",
+    "dateReviewed": "2026-10-11"
+  },
+  {
+    "name": "Crayola",
+    "url": "https://www.crayola.com/",
+    "licenseUrl": "https://www.crayola.com/company/terms-of-use",
+    "status": "reference only",
+    "reason": "No individual asset redistribution permission verified.",
+    "dateReviewed": "2026-10-11"
+  },
+  {
+    "name": "Magnific / Freepik",
+    "url": "https://www.magnific.com/free-photos-vectors/coloring-pages",
+    "licenseUrl": null,
+    "status": "reference only",
+    "reason": "Stock collection; no individual licensed asset acquired or standalone redistribution rights verified.",
+    "dateReviewed": "2026-10-11"
+  },
+  {
+    "name": "Monkey Pen",
+    "url": "https://monkeypen.com/collections/coloring-pages",
+    "licenseUrl": "https://monkeypen.com/pages/terms-and-conditions-for-teachers-and-educational-institutions",
+    "status": "not selected",
+    "reason": "Educational terms prohibit redistribution of books. No separate page-level grant for public web integration verified.",
+    "dateReviewed": "2026-10-11"
+  },
+  {
+    "name": "Pinterest",
+    "url": "https://www.pinterest.com/mommamouse9395/coloring-pages/",
+    "licenseUrl": null,
+    "status": "reference only",
+    "reason": "Board inaccessible here and not an original license source; no images copied.",
+    "dateReviewed": "2026-10-11"
+  },
+  {
+    "name": "Adobe Stock",
+    "url": "https://stock.adobe.com/my/search?k=%22coloring+pages%22",
+    "licenseUrl": "https://stock.adobe.com/license-terms",
+    "status": "not selected",
+    "reason": "No purchase/license history supplied; ordinary website use does not establish redistribution of standalone templates.",
+    "dateReviewed": "2026-10-11"
+  },
+  {
+    "name": "HP Printables",
+    "url": "https://printables.hp.com/my/en/collections/art-therapy",
+    "licenseUrl": null,
+    "status": "reference only",
+    "reason": "Collection reviewed; individual public-app redistribution permission not verified. No assets used.",
+    "dateReviewed": "2026-10-11"
+  }
+]
