@@ -9,7 +9,7 @@ function loadArt(p){if(!p?.curated)return Promise.resolve(p);if(cached.has(p.id)
 window.KIDPAINT_LOAD_ART=loadArt;window.KIDPAINT_SANITIZE_SVG=sanitizeSvg;
 CATS.splice(0,CATS.length,...defs.map(c=>({id:c.id,name:c.name,color:c.color,q:0})));
 for(const cat of CATS)for(const lv of [1,2,3])LIST[cat.id+lv]=[];
-for(const a of manifest.assets){const p={id:a.id,name:a.title,cat:a.category,lv:a.difficulty,curated:true,asset:a.localAssetPath,thumbnail:a.thumbnailPath,n:a.fillableRegions+1,age:a.recommendedAge,searchTerms:a.originalTitle+' '+a.categoryName+' '+defs.find(c=>c.id===a.category).english,get svg(){return cached.get(a.id)||''}};LIST[p.cat+p.lv].push(p);byId.set(p.id,p)}
+for(const a of manifest.assets){const p={id:a.id,name:a.title,cat:a.category,lv:a.difficulty,curated:true,asset:a.localAssetPath,thumbnail:a.thumbnailPath,n:a.fillableRegions+1,age:a.recommendedAge,searchTerms:a.originalTitle+' '+a.categoryName+' '+defs.find(c=>c.id===a.category).english,get svg(){return cached.get(a.id)||''}};if(a.catalogVisible!==false)LIST[p.cat+p.lv].push(p);byId.set(p.id,p)}
 const previousLookup=LIST.findById;LIST.findById=id=>byId.get(id)||legacy.get(id)||previousLookup(id);
 if(!CATS.some(c=>c.id===ui.cat))ui.cat=CATS[0].id;
 for(const lv of [1,2,3])delete lvThumbs[lv];
@@ -29,7 +29,7 @@ const nativeExport=toPngBlob;toPngBlob=async function(p=cur,fills=regions.map(el
 const nativeGallery=renderGallery;let galleryToken=0;renderGallery=async function(){const token=++galleryToken;$('artGallery').setAttribute('aria-busy','true');const saved=[...new Set([...Object.keys(store),...Object.keys(creative)])].filter(hasArtwork).slice(-galleryPageLimit);let next=0;await Promise.all([0,1,2].map(async()=>{while(next<saved.length){const id=saved[next++],p=byId.get(id)||byId.get(creative[id]?.sourceId);if(p)try{await loadArt(p)}catch{}}}));if(token===galleryToken){nativeGallery();$('artGallery').setAttribute('aria-busy','false')}};
 function startSelection(cat=CATS[0].id){pictureQuery='';clearTimeout(searchDelay);pickWorld=null;onlyMyArt=false;age='all';pickPageLimit=12;ui.cat=cat;saveUi();renderLevels();show('scr-level')}
 $('coverStart').onclick=()=>{SFX.start();startSelection()};
-const home=$('homeCategories');for(const c of defs){const b=document.createElement('button');b.className='home-category';const icon=document.createElement('span');icon.setAttribute('aria-hidden','true');icon.textContent=c.emoji;b.append(icon,document.createTextNode(c.name));b.onclick=()=>{SFX.start();startSelection(c.id)};home.append(b)}
+const home=$('homeCategories');home.replaceChildren();home.hidden=true;
 WORLD_DEFS.splice(0,WORLD_DEFS.length,...defs.map(c=>({id:c.id,name:c.name,emoji:c.emoji,color:c.color,cat:c.id,match:/.*/,task:''})));
 openWorlds=function(){const host=$('worldGrid');host.replaceChildren();for(const c of defs){const b=document.createElement('button');b.className='world-card';b.style.background=c.color;const icon=document.createElement('span');icon.className='world-emoji';icon.textContent=c.emoji;const name=document.createElement('h3');name.textContent=c.name;b.append(icon,name);b.onclick=()=>startSelection(c.id);host.append(b)}show('scr-world')};$('worldOpen').onclick=$('worldChange').onclick=openWorlds;
 const nativeShow=show;show=function(id){if(id!=='scr-pick')closePreview();nativeShow(id)};
