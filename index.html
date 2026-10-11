@@ -344,6 +344,7 @@ button:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
 
 .home-category-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:min(540px,100%)}.home-category{display:flex;align-items:center;justify-content:center;gap:6px;min-height:44px;border:2px solid white;border-radius:16px;background:#fff9;font:inherit;font-weight:800;font-size:13px;color:var(--fg);cursor:pointer}.home-category span{font-size:22px}.card .th img,.lvcard .th img{display:block;width:100%;height:100%;object-fit:contain;aspect-ratio:1}.pick-filters{align-items:end;flex-wrap:wrap}.pick-filters .search-field{min-width:150px}.pick-filters label:nth-child(3){width:100px}.template-preview-card{position:relative;text-align:center;max-width:510px}.template-preview-card #previewArt svg{width:100%;max-height:58svh;aspect-ratio:1;display:block}.template-preview-card #previewArt{background:white;border-radius:16px;margin-bottom:12px}.template-preview-card h2{padding-right:30px;font-size:20px}.curated-art .r{stroke:none!important}.template-preview-card .finish-close{top:8px;right:8px}.card:disabled{opacity:.6}.world-card p:empty{display:none}@media(max-width:400px){.home-category{font-size:11px;padding:5px;gap:3px}.home-category span{font-size:19px}.pick-filters{gap:6px}.pick-filters .search-field{flex-basis:100%}}
 </style>
+<style>#canvas{-webkit-tap-highlight-color:transparent}#canvas .r:focus:not(:focus-visible){outline:none}</style>
 </head>
 <body>
 
@@ -1288,8 +1289,8 @@ function progress(){
 }
 function saveState(){store[cur.id]=regions.map(el=>el.getAttribute('fill'));persist();save(KEY+'-creative',creative);lastBlob=null}
 function updateUndo(){$('undo').disabled=!history.length;$('redo').disabled=!redoStack.length}
-$('canvas').addEventListener('click',e=>{
-  if(Date.now()<suppressCanvasClick||(tool!=='fill'&&tool!=='erase')||(typeof drawingLocked==='function'&&drawingLocked()))return;
+function fillAtEvent(e){
+  if((tool!=='fill'&&tool!=='erase')||(typeof drawingLocked==='function'&&drawingLocked()))return;
   const el=typeof pickFillRegion==='function'?pickFillRegion(e):e.target.closest('.r');if(!el)return;
   const next=tool==='erase'?WHITE:color,prev=el.getAttribute('fill');
   if(prev===next)return;
@@ -1300,7 +1301,8 @@ $('canvas').addEventListener('click',e=>{
   const n=progress();
   if(n===regions.length&&!done){done=true;celebrate();$('doneBtn').classList.add('pulse');toast('🎉 颜色世界出现啦！随时点「完成」收藏作品');}
   if(n<regions.length){done=false;$('doneBtn').classList.remove('pulse')}
-});
+}
+$('canvas').addEventListener('click',e=>{if(Date.now()>=suppressCanvasClick)fillAtEvent(e)});
 $('undo').onclick=()=>{const h=history.pop();if(!h)return;SFX.tap();if(h.art){creative[cur.id]=h.art;selectedSticker=null;decorateSvg($('canvas'),cur.id)}else regions[h[0]].setAttribute('fill',h[1]);saveState();progress();updateUndo();syncStickerControls()};
 $('back').onclick=()=>{SFX.tap();closeSheet();renderPick();show('scr-pick')};
 function resetConfirm(on){
@@ -1515,10 +1517,10 @@ paintHud();renderCover();renderDock();
 <script src="character-art.js"></script>
 <script src="character-library.js"></script>
 <script src="playground.js"></script>
-<script src="experience.js"></script>
+<script src="experience-touch.js"></script>
 <script src="visit-stats.js"></script>
 <script src="curated-data-152.js"></script>
-<script src="curated-library.js"></script>
+<script src="curated-library-touch.js"></script>
 <script type="application/ld+json">{
   "@context": "https://schema.org",
   "@graph": [
