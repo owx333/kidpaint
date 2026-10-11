@@ -4,9 +4,9 @@
 
 ## 精选图库
 
-首批 97 张经授权与视觉审查的本地矢量模板：可爱动物 18、交通工具 12、幻想魔法 16、美食水果 19、边学边涂 15、节日庆典 17。来源为 Printable Coloring Pages，逐张确认 CC0，允许修改、嵌入和再发布，不要求署名。来源标注 AI 辅助创作，本项目不声称这些是手绘原创。
+现有 152 张经授权与视觉审查的本地矢量模板：可爱动物 23、交通工具 23、幻想魔法 25、美食水果 24、边学边涂 30、节日庆典 27。来源为 Printable Coloring Pages，逐张确认 CC0，允许修改、嵌入和再发布，不要求署名。来源标注 AI 辅助创作，本项目不声称这些是手绘原创。
 
-从 160 张候选筛选出 97 张；未为达到 120–180 的目标数量而加入不合格素材。详见 reports/library-upgrade.md、reports/asset-source-review.json 和 reports/rejected-assets.json。
+首批从 160 张候选筛选出 97 张，本次另从 151 张候选新增 55 张，总共 152 张；未加入不合格素材凑数量。详见 reports/library-upgrade.md、reports/library-expansion.md、reports/asset-source-review.json 和筛选记录。
 
 assets/curated/manifest.json 记录每张的稳定编号、标题、分类、本地 SVG/PNG 路径、原始来源、创作者说明、许可、核实日期、年龄、难度、源文件 SHA256 与处理说明。黑色轮廓固定，封闭空白区域可填色；图库先显示轻量 PNG，打开预览后才加载矢量。SVG 经过严格元素及属性检查，不接受脚本、事件或外部图像。
 
@@ -24,6 +24,6 @@ assets/curated/manifest.json 记录每张的稳定编号、标题、分类、本
 
 GitHub Pages 使用 main 分支和仓库根目录；CNAME 为 www.kidpaint.my。保留 SEO、彩绘盘 favicon、单一累计访问次数、使用说明和反馈入口。
 
-Service Worker 缓存本地页面、脚本、精选 SVG、缩略图和音乐。首次需要联网完成缓存。直接 file:// 打开使用本地生成的 SVG 数据包装脚本；线上按需读取 SVG 文件。
+Service Worker 缓存本地页面、脚本、精选 SVG、缩略图和音乐。版本化的 curated-data-152.js 避免旧缓存显示过期模板数量。首次需要联网完成缓存。直接 file:// 打开使用本地生成的 SVG 数据包装脚本；线上按需读取 SVG 文件。
 
 测试记录见 reports/library-upgrade.md。实际手机硬件帧率及浏览器布局截图未在本次环境测量。
