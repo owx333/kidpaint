@@ -1,0 +1,52 @@
+{
+  "imported": 933,
+  "publicTotal": 1101,
+  "byDifficulty": {
+    "1": 48,
+    "2": 493,
+    "3": 392
+  },
+  "byCategory": {
+    "可爱动物": [
+      17,
+      125,
+      55
+    ],
+    "交通工具": [
+      1,
+      21,
+      5
+    ],
+    "幻想魔法": [
+      5,
+      51,
+      19
+    ],
+    "美食水果": [
+      1,
+      4,
+      2
+    ],
+    "边学边涂": [
+      0,
+      2,
+      0
+    ],
+    "节日庆典": [
+      5,
+      23,
+      6
+    ],
+    "卡通明星": [
+      18,
+      259,
+      187
+    ],
+    "曼陀罗": [
+      1,
+      8,
+      118
+    ]
+  },
+  "authorization": "Owner confirmed permission to upload on 2026-10-12. No written grant independently verified."
+}
