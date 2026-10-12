@@ -23,7 +23,7 @@ const pairs=[
 ['已自动保存','Saved automatically'],['作品已保存','Artwork saved'],['播放背景音乐（五首自动循环）','Play music (five tracks on repeat)'],['播放儿童背景音乐','Play background music'],['播放背景音乐','Play music'],['暂停背景音乐：','Pause music: '],['收集到的星星','Collected stars'],['KidPaint，回到主页','KidPaint, go home'],['回到主页','Go home'],['返回选图','Back to pictures'],['关闭预览','Close preview'],['关闭庆祝，继续修改','Close celebration and keep editing'],['得到的星星','Stars earned']
 ];
 pairs.push(...[
-['曼陀罗','Mandalas'],
+['曼陀罗','Mandalas'],['（上次记录）',' (last recorded)'],['上次成功读取：','Last successful update: '],
 ['卡通角色线稿是简化的非官方创作，角色名称与相关权益归各自权利人所有；本站不代表相关品牌，也没有官方合作关系。','Cartoon outlines are simplified unofficial creations. Character names and rights belong to their owners. This site is not affiliated with those brands.'],
 ['重来','Start over'],['再点一下重来','Tap again to start over'],['蜡笔盒','crayon box'],['选颜色点一点，或用画笔自由画。贴纸可拖动，橡皮可擦掉；双指可以放大。','Choose a color and tap, or draw freely. Drag stickers, erase marks, and pinch to zoom.'],
 ['全部擦掉？','Clear everything?'],['不要','Cancel'],['颜色','Color'],['小小画家','Little artist'],['涂色新星','Coloring star'],['色彩达人','Color expert'],['彩虹画师','Rainbow artist'],['童彩大师','Color master'],['你已经收集了','You have collected'],['颗星星，现在是','stars. Your rank is'],['点一下就选好','Tap to select'],['自由探索 · 随时换世界','Explore freely · Switch worlds anytime'],['彩绘画布：选择颜色后可点选区域，也可以用画笔创作','Coloring canvas: select a color and tap an area, or use the brush'],['童彩乐园的小画家一起为你庆祝','KidPaint artists celebrate with you'],['女孩小画家开心跳起来','Girl artist jumps for joy'],['男孩小画家为你的作品点赞','Boy artist cheers for your artwork'],['KidPaint 童彩乐园，快乐的小画家','KidPaint, happy young artists'],['童彩乐园创作伙伴','KidPaint creative companion'],['小画家带你探索','Young artist guides your adventure'],['创作伙伴为你加油','Creative companion cheers you on'],
