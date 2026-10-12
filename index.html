@@ -1406,13 +1406,13 @@ function toPngBlob(picture=cur,fills=regions.map(el=>el.getAttribute('fill'))){
     const s=makeSvg(picture.svg,fills);decorateSvg(s,picture.id,false);
     const artist=typeof signatureFor==='function'?signatureFor(picture.id):'';
     s.setAttribute('xmlns','http://www.w3.org/2000/svg');s.setAttribute('width','1200');s.setAttribute('height','1200');
-    const url='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(s));
+    const url=URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(s)],{type:'image/svg+xml;charset=utf-8'}));
     const img=new Image();
-    img.onload=()=>{const cv=document.createElement('canvas');cv.width=1200;cv.height=1260;const g=cv.getContext('2d');
+    img.onload=()=>{URL.revokeObjectURL(url);const cv=document.createElement('canvas');cv.width=1200;cv.height=1260;const g=cv.getContext('2d');
       g.fillStyle='#fff';g.fillRect(0,0,1200,1260);g.drawImage(img,0,0,1200,1200);g.fillStyle='#FAF5FF';g.fillRect(0,1200,1200,60);g.fillStyle='#2A1B5E';g.textAlign='left';g.font='700 26px Nunito, Microsoft YaHei, sans-serif';g.fillText(artist?'小画家：'+artist:'我的彩色世界',24,1238);
       g.font='700 26px Nunito, "PingFang SC", sans-serif';g.textAlign='right';g.lineWidth=6;g.strokeStyle='#fff';g.strokeText('KidPaint 童彩乐园',1176,1238);g.fillStyle='rgba(42,27,94,.55)';g.fillText('KidPaint 童彩乐园',1176,1238);if((picture.id.startsWith('featured-')||artFor(picture.id).sourceId?.startsWith('featured-'))){g.font='14px sans-serif';g.textAlign='center';g.fillText('Twemoji · CC BY 4.0 · KidPaint adapted',600,1248)}
       cv.toBlob(b=>b?ok(b):bad(),'image/png')};
-    img.onerror=bad;img.src=url;
+    img.onerror=()=>{URL.revokeObjectURL(url);bad(Error('Image rendering failed'))};img.src=url;
   });
 }
 
@@ -1476,7 +1476,7 @@ function makeBlank(){const id='blank-'+Date.now()+'-'+Math.random().toString(36)
 function pictureById(id){return LIST.findById(id)||(id.startsWith('blank-')?{id,name:artFor(id).title||'我的自由创作',lv:1,cat:'cartoon',svg:''}:null)}
 let galleryPageLimit=12;
 function renderGallery(){const host=$('artGallery');host.innerHTML='';const ids=[...new Set([...Object.keys(store),...Object.keys(creative)])].filter(hasArtwork).reverse();if(!ids.length){host.innerHTML='<p class="empty-gallery">🖌 你的画展正等着第一幅作品。点击「新作品」，开始吧！</p>';return}
- $('moreGallery').hidden=ids.length<=galleryPageLimit;ids.slice(0,galleryPageLimit).forEach(id=>{const p=pictureById(id);if(!p)return;const card=document.createElement('article');card.className='card glass';const th=document.createElement('span');th.className='th';const svg=makeSvg(p.svg,store[id]);decorateSvg(svg,id,false);th.appendChild(svg);card.appendChild(th);const input=document.createElement('input');input.className='gallery-title';input.maxLength=40;input.value=artFor(id).title||p.name;input.setAttribute('aria-label','作品名称');input.onchange=()=>{artFor(id).title=input.value.trim()||p.name;save(KEY+'-creative',creative)};card.appendChild(input);const actions=document.createElement('div');actions.className='gallery-actions';const edit=document.createElement('button');edit.className='btn small primary';edit.textContent='🖍 继续创作';edit.onclick=()=>openPic(p);const dl=document.createElement('button');dl.className='btn small';dl.textContent='⬇ 下载';dl.onclick=async()=>{dl.disabled=true;try{const blob=await exportPicture(p);const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=(artFor(id).title||p.name)+'.png';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000)}catch{toast('下载失败，请再试一次')}finally{dl.disabled=false}};actions.append(edit,dl);card.appendChild(actions);host.appendChild(card)})}
+ $('moreGallery').hidden=ids.length<=galleryPageLimit;ids.slice(0,galleryPageLimit).forEach(id=>{const p=pictureById(id);if(!p)return;const card=document.createElement('article');card.dataset.artworkId=id;card.className='card glass';const th=document.createElement('span');th.className='th';const svg=makeSvg(p.svg,store[id]);decorateSvg(svg,id,false);th.appendChild(svg);card.appendChild(th);const input=document.createElement('input');input.className='gallery-title';input.maxLength=40;input.value=artFor(id).title||p.name;input.setAttribute('aria-label','作品名称');input.onchange=()=>{artFor(id).title=input.value.trim()||p.name;save(KEY+'-creative',creative)};card.appendChild(input);const actions=document.createElement('div');actions.className='gallery-actions';const edit=document.createElement('button');edit.className='btn small primary';edit.textContent='🖍 继续创作';edit.onclick=()=>openPic(p);const dl=document.createElement('button');dl.className='btn small';dl.textContent='⬇ 下载';dl.onclick=async()=>{dl.disabled=true;try{const blob=await exportPicture(p);const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=(artFor(id).title||p.name)+'.png';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000)}catch{toast('下载失败，请再试一次')}finally{dl.disabled=false}};actions.append(edit,dl);card.appendChild(actions);host.appendChild(card)})}
 function openGallery(){galleryPageLimit=12;renderGallery();show('scr-gallery')}
 async function exportPicture(p){return toPngBlob(p,store[p.id]||[])}
 $('coverBlank').onclick=$('pickBlank').onclick=$('galleryBlank').onclick=makeBlank;
@@ -1492,7 +1492,7 @@ $('zoomIn').onclick=()=>changeZoom(zoom*1.4);$('zoomOut').onclick=()=>changeZoom
 const canvas=$('canvas'),pointers=new Map();let gesture=null,pinch=null,suppressCanvasClick=0;
 function canvasPoint(e){const pt=canvas.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;return pt.matrixTransform(canvas.getScreenCTM().inverse())}
 canvas.addEventListener('pointerdown',e=>{if(e.button!==0||pointers.size>=2)return;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
- if(pointers.size===2){for(const id of pointers.keys())canvas.setPointerCapture(id);suppressCanvasClick=Date.now()+600;if(gesture&&gesture.kind!=='pan'){const h=history.pop();if(h?.art)creative[cur.id]=h.art;decorateSvg(canvas,cur.id);updateUndo()}gesture=null;const p=[...pointers.values()],rect=canvas.getBoundingClientRect(),cx=(p[0].x+p[1].x)/2,cy=(p[0].y+p[1].y)/2;pinch={rect,distance:Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y),zoom,worldX:viewX+(cx-rect.left)*400/zoom/rect.width,worldY:viewY+(cy-rect.top)*400/zoom/rect.height};return}
+ if(pointers.size===2){e.preventDefault();for(const id of pointers.keys())canvas.setPointerCapture(id);suppressCanvasClick=Date.now()+600;if(gesture&&gesture.kind!=='pan'){const h=history.pop();if(h?.art)creative[cur.id]=h.art;decorateSvg(canvas,cur.id);updateUndo()}gesture=null;const p=[...pointers.values()],rect=canvas.getBoundingClientRect(),cx=(p[0].x+p[1].x)/2,cy=(p[0].y+p[1].y)/2;pinch={rect,distance:Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y),zoom,worldX:viewX+(cx-rect.left)*400/zoom/rect.width,worldY:viewY+(cy-rect.top)*400/zoom/rect.height};return}
  const pt=canvasPoint(e),st=e.target.closest('[data-sticker]'),path=e.target.closest('[data-creative-path]');
  if(tool==='erase'&&(st||path)){if(typeof layerState==='function'&&layerState(cur.id)[st?'stickers':'paint'].locked)return;snapshotArt();if(st)artFor(cur.id).stickers=artFor(cur.id).stickers.filter(t=>t.id!==st.dataset.sticker);else artFor(cur.id).paths=artFor(cur.id).paths.filter(p=>p.id!==path.dataset.creativePath);selectedSticker=null;commitArt();return}
  if(['brush','rainbow','gradient'].includes(tool)){if(typeof layerState==='function'&&layerState(cur.id).paint.locked)return;snapshotArt();if(tool==='gradient')artFor(cur.id).gradientColor=color;const p={id:nextId(),d:'M'+pt.x.toFixed(1)+' '+pt.y.toFixed(1)+'l.01 .01',color,mode:tool,width:+$('brushSize').value};artFor(cur.id).paths.push(p);gesture={kind:'brush',path:p};decorateSvg(canvas,cur.id)}
@@ -1501,7 +1501,7 @@ canvas.addEventListener('pointerdown',e=>{if(e.button!==0||pointers.size>=2)retu
  else if(tool==='sticker'){selectedSticker=null;decorateSvg(canvas,cur.id);syncStickerControls()}
  if(gesture)canvas.setPointerCapture(e.pointerId);
 });
-canvas.addEventListener('pointermove',e=>{if(!pointers.has(e.pointerId))return;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pinch&&pointers.size===2){const p=[...pointers.values()],rect=pinch.rect,cx=(p[0].x+p[1].x)/2,cy=(p[0].y+p[1].y)/2;zoom=Math.max(1,Math.min(4,pinch.zoom*Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y)/Math.max(1,pinch.distance)));viewX=pinch.worldX-(cx-rect.left)*400/zoom/rect.width;viewY=pinch.worldY-(cy-rect.top)*400/zoom/rect.height;queueView();return}if(!gesture)return;const pt=gesture.kind==='pan'?null:canvasPoint(e);
+canvas.addEventListener('pointermove',e=>{if(!pointers.has(e.pointerId))return;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(e.pointerType==='touch'&&(pinch||gesture))e.preventDefault();if(pinch&&pointers.size===2){const p=[...pointers.values()],rect=pinch.rect,cx=(p[0].x+p[1].x)/2,cy=(p[0].y+p[1].y)/2;zoom=Math.max(1,Math.min(4,pinch.zoom*Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y)/Math.max(1,pinch.distance)));viewX=pinch.worldX-(cx-rect.left)*400/zoom/rect.width;viewY=pinch.worldY-(cy-rect.top)*400/zoom/rect.height;queueView();return}if(!gesture)return;const pt=gesture.kind==='pan'?null:canvasPoint(e);
  if(gesture.kind==='brush'){gesture.path.d+='L'+pt.x.toFixed(1)+' '+pt.y.toFixed(1);canvas.querySelector('[data-creative-path="'+gesture.path.id+'"]').setAttribute('d',gesture.path.d)}
  else if(gesture.kind==='sticker'){gesture.t.x=Math.max(15,Math.min(385,pt.x-gesture.dx));gesture.t.y=Math.max(15,Math.min(385,pt.y-gesture.dy));canvas.querySelector('[data-sticker="'+gesture.t.id+'"]').setAttribute('transform','translate('+gesture.t.x+' '+gesture.t.y+') rotate('+(gesture.t.rotation||0)+')')}
  else {const rect=gesture.rect;viewX=gesture.vx-(e.clientX-gesture.x)*400/zoom/rect.width;viewY=gesture.vy-(e.clientY-gesture.y)*400/zoom/rect.height;queueView()}
@@ -1522,6 +1522,7 @@ paintHud();renderCover();renderDock();
 <script src="curated-data-1106.js"></script>
 <script src="curated-library-balanced.js"></script>
 <script src="language.js"></script>
+<script src="mobile-save.js"></script>
 <script type="application/ld+json">{
   "@context": "https://schema.org",
   "@graph": [
